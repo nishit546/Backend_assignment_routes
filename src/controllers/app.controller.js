@@ -1,23 +1,45 @@
+const Note = require("../models/note.model");
 
-const createNote = async (req,res) => {
-    try{
-        const {title,content,category,isPinned} = req.body;
-        if(!title || !content || !category || !isPinned){
+const createNote = async (req, res) => {
+    try {
+        const { title, content, category, isPinned } = req.body;
+
+   
+        if (!title || !content || !category) {
             return res.status(400).json({
-                message : "Title and content are required",
+                message: "Title, content, and category are required",
             });
         }
-        const note = await Note.create({title,content,category,isPinned});
+
+        const note = await Note.create({
+            title,
+            content,
+            category,
+            isPinned: isPinned ?? false 
+        });
+
         res.status(201).json({
-            message : "Note created successfully",
-            data : note,
+            message: "Note created successfully",
+            data: note,
         });
-    }
-    catch(error){
+
+    } catch (error) {
         res.status(500).json({
-            message : "Server error",
-            error : error.message,
+            message: "Server error",
+            error: error.message,
         });
     }
-}
-module.exports = createNote;
+};
+const createNotesBulk = async (req,res) => {
+    try{
+        const notes = req.body.notes;
+        const result = await Note.insertMany(notes);
+        res.status(201).json(result);
+
+    }
+    catch(err) {
+        res.status(500).json({error : err.message});
+    }
+};
+
+module.exports = {createNote,createNotesBulk};
