@@ -1,3 +1,5 @@
+const { default: mongoose } = require("mongoose");
+
 const noteSchema = new mongoose.Schema(
   {
     title:    { type: String, required: [true, "Title is required"] },
@@ -7,3 +9,4 @@ const noteSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+module.exports = mongoose.model("Note",noteSchema);
