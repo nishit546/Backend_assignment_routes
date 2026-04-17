@@ -1,5 +1,5 @@
 const express = require("express");
-const {createNote,createNotesBulk,getAllNotes, getNotesById, updateNote, updateNotePartial, deleteNote} = require("../controllers/app.controller");
+const {createNote,createNotesBulk,getAllNotes, getNotesById, updateNote, updateNotePartial, deleteNote, deleteNotesBulk} = require("../controllers/app.controller");
 
 const router = express.Router();
 
@@ -9,6 +9,6 @@ router.get("/",getAllNotes);
 router.get("/:id",getNotesById);
 router.put("/:id",updateNote);
 router.patch('/:id', updateNotePartial);
-router.delete('/api/notes/:id', deleteNote);
-
+router.delete('/:id', deleteNote);
+router.delete('/bulk', deleteNotesBulk);
 module.exports = router;
