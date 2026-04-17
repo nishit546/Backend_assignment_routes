@@ -125,7 +125,6 @@ const deleteNote = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-const Note = require('../models/Note');
 
 const deleteNotesBulk = async (req, res) => {
   try {
