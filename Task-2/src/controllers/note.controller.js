@@ -287,3 +287,35 @@ exports.deleteBulkNotes = async (req, res) => {
     });
   }
 };
+
+// GET /api/notes/category/:category — Route param
+exports.getNotesByCategory = async (req, res) => {
+  try {
+    const { category } = req.params;
+
+    const validCategories = ["work", "personal", "study"];
+    if (!validCategories.includes(category)) {
+      return res.status(400).json({
+        success: false,
+        message: `Invalid category. Must be one of: ${validCategories.join(", ")}`,
+        data: null
+      });
+    }
+
+    const notes = await Note.find({ category });
+
+    res.status(200).json({
+      success: true,
+      message: `Notes in category '${category}' fetched successfully`,
+      count: notes.length,
+      data: notes
+    });
+
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+      data: null
+    });
+  }
+};
