@@ -487,3 +487,50 @@ exports.filterByCategory = async (req, res) => {
     });
   }
 };
+
+// GET /api/notes/filter/date-range — Query params
+exports.filterByDateRange = async (req, res) => {
+  try {
+    const { startDate, endDate } = req.query;
+
+    if (!startDate || !endDate) {
+      return res.status(400).json({
+        success: false,
+        message: "Both startDate and endDate query parameters are required",
+        data: null
+      });
+    }
+
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+
+    if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid date format. Use YYYY-MM-DD",
+        data: null
+      });
+    }
+
+    // Set end date to end of day
+    end.setHours(23, 59, 59, 999);
+
+    const notes = await Note.find({
+      createdAt: { $gte: start, $lte: end }
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "Notes in date range fetched successfully",
+      count: notes.length,
+      data: notes
+    });
+
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+      data: null
+    });
+  }
+};
