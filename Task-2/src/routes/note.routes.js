@@ -5,3 +5,5 @@ const controller = require("../controllers/note.controller");
 
 // BULK FIRST
 router.post("/bulk", controller.createBulkNotes);
+
+module.exports = router;
