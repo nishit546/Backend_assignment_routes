@@ -9,6 +9,7 @@ router.post("/", controller.createNote);
 router.post("/bulk", controller.createBulkNotes);
 router.get("/", controller.getAllNotes);
 router.get("/category/:category", controller.getNotesByCategory);
+router.get("/status/:isPinned", controller.getNotesByStatus);
 router.get("/:id", controller.getNoteById);
 router.put("/:id", controller.replaceNote);
 router.patch("/:id", controller.partialUpdateNote);
