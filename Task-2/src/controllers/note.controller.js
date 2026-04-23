@@ -637,3 +637,36 @@ exports.sortNotes = async (req, res) => {
     });
   }
 };
+
+// GET /api/notes/sort/pinned — Sorting on filtered (pinned) set
+exports.sortPinnedNotes = async (req, res) => {
+  try {
+    const { sortBy = "createdAt", order = "desc" } = req.query;
+
+    const allowedFields = ["title", "category", "createdAt", "updatedAt"];
+    if (!allowedFields.includes(sortBy)) {
+      return res.status(400).json({
+        success: false,
+        message: `Invalid sortBy field. Must be one of: ${allowedFields.join(", ")}`,
+        data: null
+      });
+    }
+
+    const sortOrder = order === "asc" ? 1 : -1;
+    const notes = await Note.find({ isPinned: true }).sort({ [sortBy]: sortOrder });
+
+    res.status(200).json({
+      success: true,
+      message: "Sorted pinned notes fetched successfully",
+      count: notes.length,
+      data: notes
+    });
+
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+      data: null
+    });
+  }
+};

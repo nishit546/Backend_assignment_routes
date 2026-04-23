@@ -17,6 +17,7 @@ router.get("/filter/date-range", controller.filterByDateRange);
 router.get("/paginate", controller.paginateNotes);
 router.get("/paginate/category/:category", controller.paginateByCategory);
 router.get("/sort", controller.sortNotes);
+router.get("/sort/pinned", controller.sortPinnedNotes);
 router.get("/:id", controller.getNoteById);
 router.get("/:id/summary", controller.getNoteSummary);
 router.put("/:id", controller.replaceNote);
