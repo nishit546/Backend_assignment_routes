@@ -564,3 +564,43 @@ exports.paginateNotes = async (req, res) => {
     });
   }
 };
+
+// GET /api/notes/paginate/category/:category — Pagination + Route param
+exports.paginateByCategory = async (req, res) => {
+  try {
+    const { category } = req.params;
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    const validCategories = ["work", "personal", "study"];
+    if (!validCategories.includes(category)) {
+      return res.status(400).json({
+        success: false,
+        message: `Invalid category. Must be one of: ${validCategories.join(", ")}`,
+        data: null
+      });
+    }
+
+    const total = await Note.countDocuments({ category });
+    const notes = await Note.find({ category }).skip(skip).limit(limit);
+
+    res.status(200).json({
+      success: true,
+      message: `Paginated notes for category '${category}' fetched successfully`,
+      count: notes.length,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+      totalNotes: total,
+      data: notes
+    });
+
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+      data: null
+    });
+  }
+};
