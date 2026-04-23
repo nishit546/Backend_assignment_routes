@@ -423,3 +423,27 @@ exports.filterNotes = async (req, res) => {
     });
   }
 };
+
+// GET /api/notes/filter/pinned — Query params
+exports.filterPinnedNotes = async (req, res) => {
+  try {
+    const { isPinned } = req.query;
+    const pinned = isPinned !== undefined ? isPinned === "true" : true;
+
+    const notes = await Note.find({ isPinned: pinned });
+
+    res.status(200).json({
+      success: true,
+      message: `Pinned=${pinned} notes fetched successfully`,
+      count: notes.length,
+      data: notes
+    });
+
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+      data: null
+    });
+  }
+};
