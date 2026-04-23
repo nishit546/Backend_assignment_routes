@@ -11,6 +11,7 @@ router.get("/", controller.getAllNotes);
 router.get("/:id", controller.getNoteById);
 router.put("/:id", controller.replaceNote);
 router.patch("/:id", controller.partialUpdateNote);
+router.delete("/bulk", controller.deleteBulkNotes);
 router.delete("/:id", controller.deleteNote);
 
 module.exports = router;
