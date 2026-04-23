@@ -67,3 +67,43 @@ exports.getAllNotes = async (req, res) => {
     });
   }
 };
+
+exports.getNoteById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // ❌ Invalid ObjectId check (VERY IMPORTANT)
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid note ID",
+        data: null
+      });
+    }
+
+    const note = await Note.findById(id);
+
+    // ❌ Not found
+    if (!note) {
+      return res.status(404).json({
+        success: false,
+        message: "Note not found",
+        data: null
+      });
+    }
+
+    // ✅ Success
+    res.status(200).json({
+      success: true,
+      message: "Note fetched successfully",
+      data: note
+    });
+
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+      data: null
+    });
+  }
+};

@@ -7,5 +7,6 @@ router.post("/", controller.createNote);
 
 // BULK FIRST
 router.post("/bulk", controller.createBulkNotes);
-router.get("/", getAllNotes);
+router.get("/", controller.getAllNotes);
+router.get("/:id", controller.getNoteById);
 module.exports = router;
