@@ -1,5 +1,5 @@
 const Note = require("../models/note.model");
-
+const mongoose = require("mongoose");
 exports.createNote = async (req, res) => {
   try {
     const { title, content, category, isPinned } = req.body;
@@ -97,6 +97,66 @@ exports.getNoteById = async (req, res) => {
       success: true,
       message: "Note fetched successfully",
       data: note
+    });
+
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+      data: null
+    });
+  }
+};
+
+exports.replaceNote = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // ❌ Validate ObjectId
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid note ID",
+        data: null
+      });
+    }
+
+    // ❌ Validate required fields (FULL replace means all required fields must be present)
+    const { title, content, category, isPinned } = req.body;
+
+    if (!title || !content) {
+      return res.status(400).json({
+        success: false,
+        message: "Title and content are required",
+        data: null
+      });
+    }
+
+    // ✅ Full replace
+    const updatedNote = await Note.findByIdAndUpdate(
+      id,
+      { title, content, category, isPinned },
+      {
+        new: true,
+        overwrite: true,      // 🔥 THIS MAKES IT FULL REPLACE
+        runValidators: true
+      }
+    );
+
+    // ❌ Not found
+    if (!updatedNote) {
+      return res.status(404).json({
+        success: false,
+        message: "Note not found",
+        data: null
+      });
+    }
+
+    // ✅ Success
+    res.status(200).json({
+      success: true,
+      message: "Note replaced successfully",
+      data: updatedNote
     });
 
   } catch (err) {
