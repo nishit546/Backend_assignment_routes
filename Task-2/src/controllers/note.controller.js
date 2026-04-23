@@ -447,3 +447,43 @@ exports.filterPinnedNotes = async (req, res) => {
     });
   }
 };
+
+// GET /api/notes/filter/category — Query params
+exports.filterByCategory = async (req, res) => {
+  try {
+    const { category } = req.query;
+
+    if (!category) {
+      return res.status(400).json({
+        success: false,
+        message: "category query parameter is required",
+        data: null
+      });
+    }
+
+    const validCategories = ["work", "personal", "study"];
+    if (!validCategories.includes(category)) {
+      return res.status(400).json({
+        success: false,
+        message: `Invalid category. Must be one of: ${validCategories.join(", ")}`,
+        data: null
+      });
+    }
+
+    const notes = await Note.find({ category });
+
+    res.status(200).json({
+      success: true,
+      message: `Notes with category '${category}' fetched successfully`,
+      count: notes.length,
+      data: notes
+    });
+
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+      data: null
+    });
+  }
+};

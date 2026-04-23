@@ -12,6 +12,7 @@ router.get("/category/:category", controller.getNotesByCategory);
 router.get("/status/:isPinned", controller.getNotesByStatus);
 router.get("/filter", controller.filterNotes);
 router.get("/filter/pinned", controller.filterPinnedNotes);
+router.get("/filter/category", controller.filterByCategory);
 router.get("/:id", controller.getNoteById);
 router.get("/:id/summary", controller.getNoteSummary);
 router.put("/:id", controller.replaceNote);
