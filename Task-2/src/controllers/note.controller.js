@@ -26,16 +26,15 @@ exports.createNote = async (req, res) => {
 
 exports.createBulkNotes = async (req, res) => {
   try {
-    const notes = req.body;
-    
-    if (!Array.isArray(notes) || notes.length === 0) {
-      return res.status(400).json({
-        success: false,
-        message: "An array of notes is required",
-        data: null
-      });
-    }
+   const { notes } = req.body;
 
+if (!notes || !Array.isArray(notes) || notes.length === 0) {
+  return res.status(400).json({
+    success: false,
+    message: "notes array is required and cannot be empty",
+    data: null
+  });
+}
     const createdNotes = await Note.insertMany(notes);
 
     res.status(201).json({
@@ -45,5 +44,26 @@ exports.createBulkNotes = async (req, res) => {
     });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message, data: null });
+  }
+};
+
+// GET /api/notes
+exports.getAllNotes = async (req, res) => {
+  try {
+    const notes = await Note.find();
+
+    res.status(200).json({
+      success: true,
+      message: "Notes fetched successfully",
+      count: notes.length,
+      data: notes
+    });
+
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+      data: null
+    });
   }
 };
