@@ -389,3 +389,37 @@ exports.getNoteSummary = async (req, res) => {
     });
   }
 };
+
+// GET /api/notes/filter — Query params
+exports.filterNotes = async (req, res) => {
+  try {
+    const { title, category, isPinned } = req.query;
+    const filter = {};
+
+    if (title) {
+      filter.title = { $regex: title, $options: "i" };
+    }
+    if (category) {
+      filter.category = category;
+    }
+    if (isPinned !== undefined) {
+      filter.isPinned = isPinned === "true";
+    }
+
+    const notes = await Note.find(filter);
+
+    res.status(200).json({
+      success: true,
+      message: "Filtered notes fetched successfully",
+      count: notes.length,
+      data: notes
+    });
+
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+      data: null
+    });
+  }
+};
