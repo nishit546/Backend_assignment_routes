@@ -13,6 +13,6 @@ app.get("/", (req, res) => {
   });
 });
 
-app.use("/api/notes", noteRoutes);
+app.use("/api/notes", noteRoutes)
 
 export default app;
